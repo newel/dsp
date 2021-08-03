@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>419</width>
+    <height>249</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>打开</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="1" column="1">
+      <widget class="QComboBox" name="comboBox_village">
+       <item>
+        <property name="text">
+         <string>一小区</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>二小区</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="2" column="0" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>IP</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QComboBox" name="comboBox_dsp_type">
+       <item>
+        <property name="text">
+         <string>B4860</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>BSC9132</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>5G</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="input_reserve"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>小区规格</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>芯片类型</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="input_ip"/>
+     </item>
+     <item row="3" column="0" alignment="Qt::AlignHCenter">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>保留</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QPushButton" name="button_bind">
+       <property name="text">
+        <string>Bind</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
