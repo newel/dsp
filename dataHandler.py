@@ -5,7 +5,8 @@ import readBinfile
 
 def getBinRootDir():
     filePath = os.getcwd()
-    fileRootDir = os.path.join(os.path.dirname(filePath), 'output')
+    # fileRootDir = os.path.join(os.path.dirname(filePath), 'output')
+    fileRootDir = os.path.join(filePath, 'output')
     return fileRootDir
 
 
@@ -32,7 +33,7 @@ def getChildrenFiles(file_dir,fileType):
 def getData(cellText,filename):  
     fileRootDir = os.path.join(getBinRootDir(), cellText)
     filename = os.path.splitext(filename)[0]
-    print('getData',fileRootDir,filename)
+    # print('getData',fileRootDir,filename)
     if filename == 'g_pdschedf_debug':
         return LOG.pdschedf_debug(fileRootDir)
     elif filename == 'g_rxfft_debug':
@@ -77,5 +78,6 @@ def getBinFilesInCell(cell):
 
 if __name__ == '__main__':
     files = getData("cell","celdddl1.bin")
-    print(files)
+    print(os.getcwd())
+    print(getBinRootDir())
         

@@ -3,55 +3,52 @@ import os
 import sys, random
 from PyQt5.QtWidgets import *
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog,QMessageBox
 from PyQt5 import QtCore,  QtWidgets
 
 import dataHandler
+import config_dialog
+import core_detail_window
 
-class Main(QtWidgets.QMainWindow,Ui_main_window.Ui_MainWindow):
+class Main_window(QtWidgets.QMainWindow,Ui_main_window.Ui_MainWindow):
     
     def __init__(self, parent =None):
-        super(Main, self).__init__(parent)
+        super(Main_window, self).__init__(parent)
         self.setupUi(self)
-        # self.setWindowTitle('此处为标题')
-        # self.treeWidget_variable_init()
+        self.windowList = []
         self.tableWidgets = []      
         self.listWidgets =[]  
         self.cells = cells = dataHandler.getCells()
-        # self.initListWidget()
         self.init_tab_page_ui()        
         self.bindTriggered()
         
-        
-        # self.listWidgetChanged()
-    def initListWidget(self):
-        '''
-            初始化listWidget
-        '''
-        item = QtWidgets.QListWidgetItem()
-        self.listWidget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.listWidget.addItem(item)
-
-
-
     def bindTriggered(self):
         '''
             事件绑定
         '''
-        # self.listWidget.itemClicked.connect(self.listWidgetChanged)
+        self.menu_open.triggered.connect(self.openConfig)
         self.tabWidget.currentChanged.connect(self.tabWidgetChanged)
+
+    def openConfig(self):
+        dialog = config_dialog.Config_dialog()
+        dialog.exec_()
 
     def tabWidgetChanged(self):
         firstFilename = self.listWidgets[0].item(0).text()
         self.loadDataByFilename(firstFilename)
 
+    
     def listWidgetChanged(self,item):        
         '''
             list点击之后的事件，需要重新刷新table
         '''
         filename = str(item.text())
-        self.loadDataByFilename(filename)
+        if filename == 'treeDemo':
+            core_detail = core_detail_window.Core_detail_window()
+            self.windowList.append(core_detail)  
+            core_detail.show()
+        else:
+            self.loadDataByFilename(filename)
 
     def loadDataByFilename(self,currentFileName):
         currentTabIndex = self.tabWidget.currentIndex() #当前选中的tab下标
@@ -81,7 +78,10 @@ class Main(QtWidgets.QMainWindow,Ui_main_window.Ui_MainWindow):
 
   
     
-    def init_tab_page_ui(self):        
+    def init_tab_page_ui(self):     
+        if len(self.cells) == 0 :      
+            QMessageBox.information(self, "提示", "请将该文件放到output文件夹同级!")      
+            return   
         self.cellText = self.cells[0]  #默认第一个
         for cell in self.cells:
             tab_cell1 = QtWidgets.QWidget()
@@ -99,6 +99,9 @@ class Main(QtWidgets.QMainWindow,Ui_main_window.Ui_MainWindow):
                 item = QtWidgets.QListWidgetItem()
                 item.setText(binFile)
                 listWidget.addItem(item)
+            # item = QtWidgets.QListWidgetItem()
+            # item.setText("treeDemo")
+            # listWidget.addItem(item)
             gridLayout_2.addWidget(listWidget, 0, 0, 1, 1, QtCore.Qt.AlignLeft)
 
 

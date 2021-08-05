@@ -9,10 +9,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 
-class Core_detail(QtWidgets.QMainWindow,Ui_core_detail_window.Ui_MainWindow):
+class Core_detail_window(QtWidgets.QMainWindow,Ui_core_detail_window.Ui_MainWindow):
     
     def __init__(self, parent =None):
-        super(Core_detail, self).__init__(parent)
+        super(Core_detail_window, self).__init__(parent)
         self.setupUi(self)
         self.setWindowTitle('此处为标题')
         self.treeWidget_variable_init()
@@ -50,14 +50,15 @@ class Core_detail(QtWidgets.QMainWindow,Ui_core_detail_window.Ui_MainWindow):
         self.button_refresh.clicked.connect(self.treeWidget_variable_triggered)
 
     def treeWidget_variable_triggered(self):
-        print('treeWidget_variable triggered')
+        # print('treeWidget_variable triggered')
+        pass
 
         
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv) 
-    mainWindow = Core_detail()
+    mainWindow = Core_detail_window()
     mainWindow.show()
     sys.exit(app.exec_())
     

@@ -56,9 +56,6 @@
        </item>
       </widget>
      </item>
-     <item row="3" column="1">
-      <widget class="QLineEdit" name="input_reserve"/>
-     </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_4">
        <property name="text">
@@ -89,6 +86,9 @@
         <string>Bind</string>
        </property>
       </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="input_reserve"/>
      </item>
     </layout>
    </item>
