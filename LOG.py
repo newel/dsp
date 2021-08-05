@@ -113,75 +113,78 @@ pduTranslist = ['CQI', 'SR', 'HARQ', 'SR_HARQ', 'CQI_HARQ', 'CQI_SR', 'CQI_SR_HA
 def pucch_log(logFilePath):
     flag = True
     inFilepath = os.path.join(logFilePath,'gPhyCatchDataBuf.bin')
-    outFilepath = os.path.join(logFilePath,'pucchLog.csv')
-    print(inFilepath)
-    with open(outFilepath,'w',newline='',encoding='utf-8-sig') as fout:
-        csv_writer = csv.writer(fout)
-        csv_writer.writerow(["numant","frame_structure","sf_idx","ul_dl_config","n_cell_id","inv_q","fft_size","bw","mode","num_rb","num_user",  "pdu_type", "shorten:4",  "num_sr_idx: 4", "m_sr", "ridx_sr", "num_an", "an_mode:4", "num_an_idx:4", "n_rnti", "m_f1[0]", "m_f1[1]", "m_f1[2]", "m_f1[3]", "r_idx_f1[0]", "r_idx_f1[1]", "r_idx_f1[2]", "r_idx_f1[3]", "num_cqi_data",  "num_cqi_idx",   "m_f2", "r_idx_f2","out_ul_cqi", "out_sr",     "out_num_an", "out_mode",   "out_an4:4", "out_an0:4", "out_an5:4",  "out_an1:4",  "out_an6:4",  "out_an2:4",  "out_an7:4",  "out_an3:4",  "out_num_dl_cqi", "out_snr","out_ts","out_data"])
-        with open(inFilepath,'rb') as fin:
+    # outFilepath = os.path.join(logFilePath,'pucchLog.csv')
+    # with open(outFilepath,'w',newline='',encoding='utf-8-sig') as fout:
+    #     csv_writer = csv.writer(fout)
+    #     csv_writer.writerow(["numant","frame_structure","sf_idx","ul_dl_config","n_cell_id","inv_q","fft_size","bw","mode","num_rb","num_user",  "pdu_type", "shorten:4",  "num_sr_idx: 4", "m_sr", "ridx_sr", "num_an", "an_mode:4", "num_an_idx:4", "n_rnti", "m_f1[0]", "m_f1[1]", "m_f1[2]", "m_f1[3]", "r_idx_f1[0]", "r_idx_f1[1]", "r_idx_f1[2]", "r_idx_f1[3]", "num_cqi_data",  "num_cqi_idx",   "m_f2", "r_idx_f2","out_ul_cqi", "out_sr",     "out_num_an", "out_mode",   "out_an4:4", "out_an0:4", "out_an5:4",  "out_an1:4",  "out_an6:4",  "out_an2:4",  "out_an7:4",  "out_an3:4",  "out_num_dl_cqi", "out_snr","out_ts","out_data"])
+    allRecord = []
+    columns = ["numant","frame_structure","sf_idx","ul_dl_config","n_cell_id","inv_q","fft_size","bw","mode","num_rb","num_user",  "pdu_type", "shorten:4",  "num_sr_idx: 4", "m_sr", "ridx_sr", "num_an", "an_mode:4", "num_an_idx:4", "n_rnti", "m_f1[0]", "m_f1[1]", "m_f1[2]", "m_f1[3]", "r_idx_f1[0]", "r_idx_f1[1]", "r_idx_f1[2]", "r_idx_f1[3]", "num_cqi_data",  "num_cqi_idx",   "m_f2", "r_idx_f2","out_ul_cqi", "out_sr",     "out_num_an", "out_mode",   "out_an4:4", "out_an0:4", "out_an5:4",  "out_an1:4",  "out_an6:4",  "out_an2:4",  "out_an7:4",  "out_an3:4",  "out_num_dl_cqi", "out_snr","out_ts","out_data"]
+    with open(inFilepath,'rb') as fin:
+        
+        while flag:
+            loglist = []
+            loglist.extend(read2_4bit(fin))
+            loglist.append(readchar(fin))
+            fin.seek(1, 1)#cptype
+            loglist.append(readchar(fin))
             
-            while flag:
-                loglist = []
-                loglist.extend(read2_4bit(fin))
-                loglist.append(readchar(fin))
-                fin.seek(1, 1)#cptype
-                loglist.append(readchar(fin))
+            fin.seek(4, 1)# "rs_group_hop",  "n_cs",  "delta_pucch_shift", "n_rb_2"
+            
+            loglist.append(readshort(fin))
+            loglist.append(readshort(fin))
+
+            loglist.extend(read2_4bit(fin))
+            loglist.append(readchar(fin))
+            loglist.append(readchar(fin))
+            pucchNum = readchar(fin)
+            loglist.append(pucchNum)
+
+            for i in range(pucchNum):
+                ueOutlist = readPucchOut(fin, i, pucchNum)
+                uelist = []
+                pdutype = readchar(fin)
+                pdutypeStr = pduTranslist[pdutype]
+                uelist.append(pdutypeStr)
+                uelist.extend(read2_4bit(fin))
+                uelist.append(readchar(fin))
+                fin.seek(1, 1)
+
+                uelist.append(readshort(fin))
+                fin.seek(2, 1)
                 
-                fin.seek(4, 1)# "rs_group_hop",  "n_cs",  "delta_pucch_shift", "n_rb_2"
+                uelist.append(readchar(fin))
+                uelist.extend(read2_4bit(fin))
+                uelist.append(readshort(fin))
+
+                uelist.append(readchar(fin))
+                uelist.append(readchar(fin))
+                uelist.append(readchar(fin))
+                uelist.append(readchar(fin))
+
+                uelist.append(readshort(fin))
+                uelist.append(readshort(fin))
+                uelist.append(readshort(fin))
+                uelist.append(readshort(fin))
+
+                uelist.append(readchar(fin))
+                uelist.append(readchar(fin))
+                uelist.append(readchar(fin))
+                fin.seek(1, 1)
+
+                uelist.append(readshort(fin))
+                fin.seek(2, 1)
                 
-                loglist.append(readshort(fin))
-                loglist.append(readshort(fin))
-
-                loglist.extend(read2_4bit(fin))
-                loglist.append(readchar(fin))
-                loglist.append(readchar(fin))
-                pucchNum = readchar(fin)
-                loglist.append(pucchNum)
-
-                for i in range(pucchNum):
-                    ueOutlist = readPucchOut(fin, i, pucchNum)
-                    uelist = []
-                    pdutype = readchar(fin)
-                    pdutypeStr = pduTranslist[pdutype]
-                    uelist.append(pdutypeStr)
-                    uelist.extend(read2_4bit(fin))
-                    uelist.append(readchar(fin))
-                    fin.seek(1, 1)
-
-                    uelist.append(readshort(fin))
-                    fin.seek(2, 1)
-                    
-                    uelist.append(readchar(fin))
-                    uelist.extend(read2_4bit(fin))
-                    uelist.append(readshort(fin))
-
-                    uelist.append(readchar(fin))
-                    uelist.append(readchar(fin))
-                    uelist.append(readchar(fin))
-                    uelist.append(readchar(fin))
-
-                    uelist.append(readshort(fin))
-                    uelist.append(readshort(fin))
-                    uelist.append(readshort(fin))
-                    uelist.append(readshort(fin))
-
-                    uelist.append(readchar(fin))
-                    uelist.append(readchar(fin))
-                    uelist.append(readchar(fin))
-                    fin.seek(1, 1)
-
-                    uelist.append(readshort(fin))
-                    fin.seek(2, 1)
-                    
-                    csv_writer.writerow(loglist + uelist + ueOutlist)
-                
-                if readchar(fin) == 0x5a:
-                    print("PUCCH LOG END！")
-                    break
-                fin.seek(-1, 1)
+                # csv_writer.writerow(loglist + uelist + ueOutlist)
+                allRecord.append(loglist + uelist + ueOutlist)
+            
+            if readchar(fin) == 0x5a:
+                print("PUCCH LOG END！")
+                break
+            fin.seek(-1, 1)
 
         fin.close()
-    fout.close()
+    return columns,allRecord
+    # fout.close()
 
 def pusch_log(logFilePath):
     flag = True
@@ -495,118 +498,130 @@ def eftpe_debug(logFilePath):
     PDSCHEDF_RECORD_SIZE = 200
     flag = True
     inFilepath = os.path.join(logFilePath,'g_eftpe_debug.bin')
-    outFilepath = os.path.join(logFilePath,'g_eftpe_debug.csv')
-    with open(outFilepath,'w',newline='',encoding='utf-8-sig') as fout:
-        csv_writer = csv.writer(fout)
-        csv_writer.writerow(["event","readPtr/antid","wirterPtr/pmid","numUser/type","idx", "timestamp"])
-        with open(inFilepath,'rb') as fin:
+    # outFilepath = os.path.join(logFilePath,'g_eftpe_debug.csv')
+    # with open(outFilepath,'w',newline='',encoding='utf-8-sig') as fout:
+    #     csv_writer = csv.writer(fout)
+    #     csv_writer.writerow(["event","readPtr/antid","wirterPtr/pmid","numUser/type","idx", "timestamp"])
+    columns = ["event","readPtr/antid","wirterPtr/pmid","numUser/type","idx", "timestamp"]
+    alllist = []
+    with open(inFilepath,'rb') as fin:
+        
+        while flag:
             
-            while flag:
-                
-                record_list = []
-                timestamp_list = []
+            record_list = []
+            timestamp_list = []
 
-                for i in range(PDSCHEDF_RECORD_SIZE):
-                    record = readrecoder(fin)
-                    record_list.append(record)
-                    pass
-
-                for i in range(PDSCHEDF_RECORD_SIZE):                    
-                    timestamp_list.append(readint(fin))
-                    pass
-
-
-                for i in range(PDSCHEDF_RECORD_SIZE):
-                    loglist = []
-                    record = record_list[i]
-                    
-                    loglist = record
-                    loglist.append(timestamp_list[i])
-                    csv_writer.writerow(loglist)
-                    pass             
-
-                flag = False
+            for i in range(PDSCHEDF_RECORD_SIZE):
+                record = readrecoder(fin)
+                record_list.append(record)
                 pass
 
-        fin.close()
-    fout.close()
+            for i in range(PDSCHEDF_RECORD_SIZE):                    
+                timestamp_list.append(readint(fin))
+                pass
+
+
+            for i in range(PDSCHEDF_RECORD_SIZE):
+                loglist = []
+                record = record_list[i]
+                
+                loglist = record
+                loglist.append(timestamp_list[i])
+                # csv_writer.writerow(loglist)
+                alllist.append(loglist)
+                pass             
+
+            flag = False
+            pass
+
+    fin.close()
+    return columns,alllist
+    # fout.close()
 
 def puschEdf_debug(logFilePath):
     PDSCHEDF_RECORD_SIZE = 200
     flag = True
     inFilepath = os.path.join(logFilePath,'g_puschedf_debug.bin')
-    outFilepath = os.path.join(logFilePath,'g_puschedf_debug.csv')
-    with open(outFilepath,'w',newline='',encoding='utf-8-sig') as fout:
-        csv_writer = csv.writer(fout)
-        csv_writer.writerow(["event","rsv","sfi","numUser","idx", "timestamp"])
-        with open(inFilepath,'rb') as fin:
+    # outFilepath = os.path.join(logFilePath,'g_puschedf_debug.csv')
+    # with open(outFilepath,'w',newline='',encoding='utf-8-sig') as fout:
+    #     csv_writer = csv.writer(fout)
+    #     csv_writer.writerow(["event","rsv","sfi","numUser","idx", "timestamp"])
+    alllist = []
+    columns = ["event","rsv","sfi","numUser","idx", "timestamp"]
+    with open(inFilepath,'rb') as fin:
+        
+        while flag:
             
-            while flag:
-                
-                record_list = []
-                timestamp_list = []
+            record_list = []
+            timestamp_list = []
 
-                for i in range(PDSCHEDF_RECORD_SIZE):
-                    record = readrecoder(fin)
-                    record_list.append(record)
-                    pass
-
-                for i in range(PDSCHEDF_RECORD_SIZE):                    
-                    timestamp_list.append(readint(fin))
-                    pass
-
-
-                for i in range(PDSCHEDF_RECORD_SIZE):
-                    loglist = []
-                    record = record_list[i]
-                    
-                    loglist = record
-                    loglist.append(timestamp_list[i])
-                    csv_writer.writerow(loglist)
-                    pass             
-
-                flag = False
+            for i in range(PDSCHEDF_RECORD_SIZE):
+                record = readrecoder(fin)
+                record_list.append(record)
                 pass
 
-        fin.close()
-    fout.close()	
+            for i in range(PDSCHEDF_RECORD_SIZE):                    
+                timestamp_list.append(readint(fin))
+                pass
+
+
+            for i in range(PDSCHEDF_RECORD_SIZE):
+                loglist = []
+                record = record_list[i]
+                
+                loglist = record
+                loglist.append(timestamp_list[i])
+                # csv_writer.writerow(loglist)
+                alllist.append(loglist)
+                pass             
+
+            flag = False
+            pass
+
+    fin.close()
+    return columns,alllist
+    # fout.close()	
 
 def cpri_debug(logFilePath):
     PDSCHEDF_RECORD_SIZE = 200
     flag = True
     inFilepath = os.path.join(logFilePath,'g_cpri_debug.bin')
-    outFilepath = os.path.join(logFilePath,'g_cpri_debug.csv')
-    with open(outFilepath,'w',newline='',encoding='utf-8-sig') as fout:
-        csv_writer = csv.writer(fout)
-        csv_writer.writerow(["event","rsv","sf","num_symbols","idx", "timestamp"])
-        with open(inFilepath,'rb') as fin:
-            
-            while flag:                
-                record_list = []
-                timestamp_list = []
+    # outFilepath = os.path.join(logFilePath,'g_cpri_debug.csv')
+    # with open(outFilepath,'w',newline='',encoding='utf-8-sig') as fout:
+    #     csv_writer = csv.writer(fout)
+    #     csv_writer.writerow(["event","rsv","sf","num_symbols","idx", "timestamp"])
+    columns = ["event","rsv","sf","num_symbols","idx", "timestamp"]
+    alllist = []
+    with open(inFilepath,'rb') as fin:
+        
+        while flag:                
+            record_list = []
+            timestamp_list = []
 
-                for i in range(PDSCHEDF_RECORD_SIZE):
-                    record = readrecoder(fin)
-                    record_list.append(record)
-                    pass
-
-                for i in range(PDSCHEDF_RECORD_SIZE):                    
-                    timestamp_list.append(readint(fin))
-                    pass
-
-
-                for i in range(PDSCHEDF_RECORD_SIZE):
-                    loglist = []
-                    record = record_list[i]                    
-                    loglist = record
-                    loglist.append(timestamp_list[i])
-                    csv_writer.writerow(loglist)
-                    pass 
-                flag = False
+            for i in range(PDSCHEDF_RECORD_SIZE):
+                record = readrecoder(fin)
+                record_list.append(record)
                 pass
 
-        fin.close()
-    fout.close()
+            for i in range(PDSCHEDF_RECORD_SIZE):                    
+                timestamp_list.append(readint(fin))
+                pass
+
+
+            for i in range(PDSCHEDF_RECORD_SIZE):
+                loglist = []
+                record = record_list[i]                    
+                loglist = record
+                loglist.append(timestamp_list[i])
+                # csv_writer.writerow(loglist)
+                alllist.append(loglist)
+                pass 
+            flag = False
+            pass
+
+    fin.close()
+    return columns,alllist 
+    # fout.close()
 
 def cpri_overTimeCnt(logFilePath):
     inFilepath = os.path.join(logFilePath,'g_cpriDebugOutTime.bin')

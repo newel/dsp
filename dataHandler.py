@@ -1,6 +1,7 @@
 #-*- coding:utf-8 -*-
 import os
 import LOG
+import readBinfile
 
 def getBinRootDir():
     filePath = os.getcwd()
@@ -30,11 +31,37 @@ def getChildrenFiles(file_dir,fileType):
 
 def getData(cellText,filename):  
     fileRootDir = os.path.join(getBinRootDir(), cellText)
-    print('getData',fileRootDir)
-    if filename == 'g_pdschedf_debug.bin':
+    filename = os.path.splitext(filename)[0]
+    print('getData',fileRootDir,filename)
+    if filename == 'g_pdschedf_debug':
         return LOG.pdschedf_debug(fileRootDir)
-    elif filename == 'g_rxfft_debug.bin':
+    elif filename == 'g_rxfft_debug':
         return LOG.pufft_debug(fileRootDir)
+    elif filename == 'g_cpri_debug':
+        return LOG.cpri_debug(fileRootDir)
+    elif filename == 'g_cpriDebugOutTime':
+        return LOG.cpri_overTimeCnt(fileRootDir)
+    elif filename == 'g_eftpe_debug':
+        return LOG.eftpe_debug(fileRootDir)
+    elif filename == 'g_puschedf_debug':
+        return LOG.puschEdf_debug(fileRootDir)
+    else:        
+        if 'gPhyDebug' in filename:
+            return readBinfile.ReadFile_debug(fileRootDir, filename+'.bin')
+        elif 'sys_param' in filename:
+            return readBinfile.ReadFile_debug(fileRootDir, filename+'.bin')
+        elif 'gErrLog' in filename:
+            return readBinfile.ReadFile_debug(fileRootDir, filename+'.bin')
+        elif 'gEvtMgrCnt' in filename:
+            return readBinfile.ReadFile_debug(fileRootDir, filename+'.bin')
+        elif 'gEvtWaitCnt' in filename:
+            return readBinfile.ReadFile_debug(fileRootDir, filename+'.bin')
+        elif 'gcsReport' in filename:
+            return readBinfile.ReadFile_debug(fileRootDir, filename+'.bin')
+        elif 'gcsBuf' in filename:
+            return readBinfile.ReadFile_debug(fileRootDir, filename+'.bin')
+        
+
     return None,None
 
 def getCells():
@@ -49,6 +76,6 @@ def getBinFilesInCell(cell):
 
 
 if __name__ == '__main__':
-    files = getBinFilesInCell("cell1")
+    files = getData("cell","celdddl1.bin")
     print(files)
         

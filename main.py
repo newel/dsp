@@ -1,5 +1,5 @@
 import Ui_main_window
-
+import os
 import sys, random
 from PyQt5.QtWidgets import *
 
@@ -44,19 +44,20 @@ class Main(QtWidgets.QMainWindow,Ui_main_window.Ui_MainWindow):
 
     def tabWidgetChanged(self):
         firstFilename = self.listWidgets[0].item(0).text()
-        self.loadData(firstFilename)
+        self.loadDataByFilename(firstFilename)
 
     def listWidgetChanged(self,item):        
         '''
             list点击之后的事件，需要重新刷新table
         '''
         filename = str(item.text())
-        self.loadData(filename)
+        self.loadDataByFilename(filename)
 
-    def loadData(self,currentFileName):
+    def loadDataByFilename(self,currentFileName):
         currentTabIndex = self.tabWidget.currentIndex() #当前选中的tab下标
         self.cellText = self.cells[currentTabIndex]
         self.currentFileName = currentFileName
+        filename = os.path.splitext(currentFileName)[0]
         columns,datas = dataHandler.getData(self.cellText,currentFileName)  #根据点击获取数据
         tableWidget = self.tableWidgets[currentTabIndex]
         if datas == None:
@@ -68,7 +69,7 @@ class Main(QtWidgets.QMainWindow,Ui_main_window.Ui_MainWindow):
             tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)#所有列自动拉伸，充满界面
             tableWidget.setSelectionMode(QAbstractItemView.SingleSelection)  # 设置只能选中一行
             tableWidget.setEditTriggers(QTableView.NoEditTriggers)  # 不可编辑
-            tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows);  # 设置只有行选中
+            tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows);  # 设置只有行选中            
             tableWidget.setHorizontalHeaderLabels(columns) #横向标题排列，如果使用setVerticalHeaderLabels则是纵向排列标题
             for i in range(len(datas)):#注意上面列表中数字加单引号，否则下面不显示(或者下面str方法转化一下即可)
                 item=datas[i]
