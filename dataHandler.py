@@ -5,8 +5,8 @@ import readBinfile
 
 def getBinRootDir():
     filePath = os.getcwd()
-    # fileRootDir = os.path.join(os.path.dirname(filePath), 'output')
-    fileRootDir = os.path.join(filePath, 'output')
+    fileRootDir = os.path.join(os.path.dirname(filePath), 'output')
+    # fileRootDir = os.path.join(filePath, 'output')
     return fileRootDir
 
 

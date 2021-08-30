@@ -105,12 +105,13 @@ class Main_window(QtWidgets.QMainWindow,Ui_main_window.Ui_MainWindow):
             gridLayout_2.addWidget(listWidget, 0, 0, 1, 1, QtCore.Qt.AlignLeft)
 
 
-            tableWidget = QtWidgets.QTableWidget(tab_cell1)
-            tableWidget.setObjectName("tableWidget_"+cell)
-            tableWidget.setColumnCount(10)
-            tableWidget.setRowCount(20)
-            self.tableWidgets.append(tableWidget)
-            gridLayout_2.addWidget(tableWidget, 0, 1, 1, 1)
+            # tableWidget = QtWidgets.QTableWidget(tab_cell1)
+            # tableWidget.setObjectName("tableWidget_"+cell)
+            # tableWidget.setColumnCount(10)
+            # tableWidget.setRowCount(20)
+            # self.tableWidgets.append(tableWidget)
+            mainWindow = core_detail_window.Core_detail_window()
+            gridLayout_2.addWidget(mainWindow, 0, 1, 1, 1)
             self.tabWidget.addTab(tab_cell1, cell)
 
 
