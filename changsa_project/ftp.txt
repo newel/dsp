@@ -1,0 +1,7 @@
+IP地址：10.154.28.69                 
+端口号：218
+默认FTP用户名密码：ftpuser/123456 
+默认北向告警用户名密码：ltehems/123456  
+北向NRM文件路径：/BJ/WX/LTE/GZ_OMC/CM
+北向PM文件路径：/BJ/WX/LTE/GZ_OMC/PM
+北向告警文件路径：/BJ/WX/LTE/GZ_OMC/FM

@@ -1,0 +1,8 @@
+#pyinstaller.exe  --onefile --windowed modify.py
+pyinstaller.exe -c -F modify.py
+如果报错：
+在modify.spec第二行增加如下程序：
+import sys
+sys.setrecursionlimit(1000000) #设置递归深度
+再执行如下命令即可
+pyinstaller   -c -F  modify.spec
